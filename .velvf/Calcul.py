@@ -1,10 +1,12 @@
 import telebot
+import import_words as imword
 token='6172888920:AAHbYb_j6B2qXgqCex5KAAqB46C5k2EMF9o'
 bot=telebot.TeleBot(token)
 result = ""
 result_first = 0.0
 result_second = 0.0
 to_do = ""
+abc = []
 @bot.message_handler(commands=['start'])
 def controller(message):
     My_KeyBoard(message)
@@ -25,7 +27,7 @@ def My_KeyBoard(message):
     but11 = telebot.types.KeyboardButton('7')
     but12 = telebot.types.KeyboardButton('8')
     but13 = telebot.types.KeyboardButton('0')
-    but14 = telebot.types.KeyboardButton('=')
+    but14 = telebot.types.KeyboardButton('равно')
     my_markup.row(but1, but2, but3,but4)
     my_markup.row(but5,but6,but7,but8)
     my_markup.row(but9,but10,but11,but12)
@@ -38,12 +40,13 @@ def process(message):
     global result_first
     global result_second
     global to_do
+    global abc
     number = message.text
     if number.isdigit():
         result += number
         print(result)
         bot.register_next_step_handler(message,process)
-    elif number == '=':
+    elif number == 'равно':
         if to_do == '+':
             otvet = float(result_first) + float(result)
         if to_do == '-':
@@ -53,6 +56,8 @@ def process(message):
         if to_do == '/':
             otvet = float(result_first)/float(result)
         bot.send_message(message.chat.id,otvet)
+        abc = [result_first, to_do, result, '=' ,otvet]
+        imword.import_data(abc)
         result_first = 0.0
         result = ''
         bot.register_next_step_handler(message,process)
